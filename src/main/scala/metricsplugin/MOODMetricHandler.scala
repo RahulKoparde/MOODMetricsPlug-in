@@ -34,7 +34,7 @@ class MOODMetricHandler extends AbstractHandler {
 				if(projects.size > 1) { projects(0).getElementName } else { "project_from_workspace" },
 				null);
 		
-        def projectExists(name:String) = projects.findIndexOf(_.getElementName == name) != -1
+        def projectExists(name:String) = projects.indexWhere(_.getElementName == name) != -1
         //projects.map(_.)
         
         

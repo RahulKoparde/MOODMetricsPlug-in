@@ -108,7 +108,7 @@ class MetricsCalculator(proj:String) {
    * @return The total number of methods in the current <code>Project</code>.
    */  
   def getTotalMethods = {
-    var x = methods.values.toList.flatMap { x => x } 
+    var x = methods.valuesIterator.toList.flatMap { x => x } 
     //Console println "getTotalMethods:x " + x
     x.length
   }
@@ -119,7 +119,7 @@ class MetricsCalculator(proj:String) {
    * @return The total number of fields/attributes in the <code>Project</code>.
    */   
   def getTotalFields = {
-    var x = fields.values.toList.flatMap { x => x } 
+    var x = fields.valuesIterator.toList.flatMap { x => x } 
     //Console println "getTotalFields:x " + x
     x.length
   }
@@ -312,9 +312,8 @@ class MetricsCalculator(proj:String) {
     val superClasses = hierarchy.getAllSuperclasses(primaryType).toList
     val descendants = hierarchy.getAllSubtypes(primaryType).toList
     
-    var inheritedMeths:List[IMethod] = List.flatten(
-      superClasses.map(_.getMethods.filter(
-        x => if(!countConstructors) { !x.isConstructor } else { true } ).toList))
+    var inheritedMeths:List[IMethod] = 
+      superClasses map (_.getMethods.filter(x => if(!countConstructors) { !x.isConstructor } else { true } )) flatten
     val mths:List[IMethod] = primaryType.getMethods.
       filter(x => if(!countConstructors) { !x.isConstructor } else { true } ).toList
 
@@ -331,7 +330,7 @@ class MetricsCalculator(proj:String) {
       map(_.resolveBinding).toList ++ List(objectTB)
     
     val superMethodBindings:List[IMethodBinding] = 
-      List.flatten(superClassBindings.map(_.getDeclaredMethods.toList))
+      superClassBindings map (_.getDeclaredMethods.toList) flatten
 
     val supMB = scala.collection.mutable.Set[IMethodBinding]()
     superMethodBindings.foreach(x =>
@@ -454,11 +453,10 @@ class MetricsCalculator(proj:String) {
      * The inherited methods, i.e., all the methods from the superclasses.  This is a
      * concatenation of the methods in each of the classes
      */
-    var inheritedMeths:List[IMethod] = List.flatten(
-      superClasses.map(_.getMethods.filter(
-        x => if(!countConstructors) { !x.isConstructor } else { true } ).toList))
+    var inheritedMeths:List[IMethod] = 
+      superClasses map(_.getMethods.filter(x => if(!countConstructors) { !x.isConstructor } else { true } )) flatten
     var inheritedFlds:List[IField] = 
-      List.flatten(superClasses.map(_.getFields.toList))
+      superClasses map (_.getFields.toList) flatten
     
     /*
      * stores all the methods and fields of the current class, represented by 
@@ -500,7 +498,7 @@ class MetricsCalculator(proj:String) {
     // if true we work it out for a method and not a field
     if(isMeth) {
       val superMethodBindings:List[IMethodBinding] = 
-        List.flatten(superClassBindings.map(_.getDeclaredMethods.toList))
+        superClassBindings map (_.getDeclaredMethods.toList) flatten
       val supMB = scala.collection.mutable.Set[IMethodBinding]()
       superMethodBindings.foreach(x => 
         if(!supMB.exists(y => x.toString == y.toString)) { supMB += x} else { } )
@@ -570,7 +568,7 @@ class MetricsCalculator(proj:String) {
      * <code>M_a(C_i)</code>
      */
     var invokableMethods = 0
-    for(c <- methods.keys) {
+    for(c <- methods.keysIterator) {
       // true is passed, as we wish to calculate invokations for methods not fields
       invokableMethods += getPossibleInvokations(true,c)
     }
@@ -595,7 +593,7 @@ class MetricsCalculator(proj:String) {
     }
     // note methods.keys return all the class names
     var invokableAttributes = 0
-    for(c <- methods.keys) {
+    for(c <- methods.keysIterator) {
       invokableAttributes += getPossibleInvokations(false,c)
     }
     Console println "\ninherited: " + inheritedAttributes
@@ -810,14 +808,13 @@ class MetricsCalculator(proj:String) {
     )
     
     // ensure that the Visibility isn't null or the empty string ("")
-    List.flatten(methods.values.toList).map(m =>
+    methods.valuesIterator.toList flatten map (m =>
       assert(m._1 != "" && m._1 != null && m._2 != "" && m._2 != null, 
              "we have a (MethodName,Visibility) that is potentially null: " + m))
     
-    List.flatten(fields.values.toList).map(f =>
+    fields.valuesIterator.toList flatten map (f =>
       assert(f._1 != "" && f._1 != null && f._2 != "" && f._2 != null, 
-             "we have a (FieldName,Visibility) that is potentially null: " + f)
-    )
+             "we have a (FieldName,Visibility) that is potentially null: " + f))
   }
 
   /** 
@@ -863,6 +860,6 @@ class MetricsCalculator(proj:String) {
     }
     
     // store everything single type declared in all <code>ICompilationUnit</code>s.
-    classTypes = List.flatten(classes.map(_.getAllTypes.toList.filter(_.isClass)))
+    classTypes = classes map (_.getAllTypes.toList.filter(_.isClass)) flatten
   }   
 }
