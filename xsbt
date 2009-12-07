@@ -1,0 +1,2 @@
+#!/bin/sh
+java -Xms512M -Xmx1g -Xss4m -jar `dirname $0`/tools/xsbt-launch-0.6.0.jar "$@"

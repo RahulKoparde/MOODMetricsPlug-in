@@ -5,154 +5,113 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="MOODMetricsPlugin">
-    <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../../../eclipse"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.5"/>
-    <property name="source" value="1.5"/>
-    	
-    <path id="Scala Library version 2.7.3.r17139-b20090218161844.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/configuration/org.eclipse.osgi/bundles/188/1/.cp/lib/scala-library.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/configuration/org.eclipse.osgi/bundles/188/1/.cp/lib/scala-dbc.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/configuration/org.eclipse.osgi/bundles/188/1/.cp/lib/scala-swing.jar"/>
-    </path>
-	
-    <path id="Plug-in Dependencies.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.ui_3.4.0.I20080610-1200.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.swt_3.4.0.v3448f.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.swt.gtk.linux.x86_64_3.4.0.v3448f.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.jface_3.4.0.I20080606-1300.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.commands_3.4.0.I20080509-2000.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.ui.workbench_3.4.0.I20080606-1300.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime_3.4.0.v20080512.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.osgi_3.4.0.v20080605-1900.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.weaving.hook_1.0.0.200901261628.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.jobs_3.4.0.v20080512.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/runtime_registry_compatibility.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.preferences_3.2.200.v20080421-2006.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.equinox.app_1.1.0.v20080421-2006.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.core.resources_3.4.0.v20080604-1400.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.core_3.4.0.v_874.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.compiler.apt_1.0.100.v20080513-1235.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.jdt.compiler.tool_1.0.100.v_874.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.jface.text_3.4.0.v20080603-2000.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.eclipse.text_3.4.0.v20080605-1800.jar"/>
-    </path>
-	
-	
-	
+	<property environment="env"/>
+	<property name="ECLIPSE_HOME" value="../../eclipse-SDK-3.5-linux-gtk-scala"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.5"/>
+	<property name="source" value="1.5"/>
+
+	<path id="plugin-dependencies.libraryclasspath">	
+		<fileset dir="${ECLIPSE_HOME}">
+		     <include name="plugins/*.jar"/>
+		</fileset>		
+	</path>
 
 	<!-- Common paths -->
 	<property name="src.dir" value="${basedir}/src" />
-	<property name="build.dir" value="${basedir}/bin"/>	
-	<property name="docs.dir" value="${basedir}/javadoc"/>	
+	<property name="build.dir" value="${basedir}/bin"/>
+	<property name="docs.dir" value="${basedir}/scaladoc"/>
 
-	
 	<!-- Scala CLASSPATH -->
-	<property name="scala.home" value="/home/mbana/scala/scala-2.7.3.final"/>
+	<property name="scala.home" value="/home/mbana/scala/scala"/>
 	<property name="scala-compiler.jar" value="${scala.home}/lib/scala-compiler.jar"/>
 	<property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>
 	<path id="scala.classpath">
-	<pathelement location="${scala-compiler.jar}"/>
-	<pathelement location="${scala-library.jar}"/>
+		<pathelement location="${scala-compiler.jar}"/>
+		<pathelement location="${scala-library.jar}"/>
 	</path>
 
 	<!-- Project CLASSPATH -->
 	<path id="project.classpath">
-	<path refid="scala.classpath"/>
-	<path refid="Plug-in Dependencies.libraryclasspath"/>
-	<pathelement location="${build.dir}"/>
+		<path refid="scala.classpath"/>
+		<path refid="plugin-dependencies.libraryclasspath"/>
+		<pathelement location="${build.dir}"/>
 	</path>
 
 	<!-- Scala compiler task -->
 	<taskdef resource="scala/tools/ant/antlib.xml">
-	<classpath refid="scala.classpath"/>
+		<classpath refid="scala.classpath"/>
 	</taskdef>
 
 	<!-- Compiles sources by using "scalac" command. -->
 	<target name="compile">
-	<mkdir dir="${build.dir}"/>
-	<scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="project.classpath" force="changed">
-	<include name="**/*.scala"/>
-	</scalac>
+		<mkdir dir="${build.dir}"/>
+		<scalac srcdir="${src.dir}" destdir="${build.dir}" 
+			classpathref="project.classpath" force="changed">
+			<include name="**/*.scala"/>
+		</scalac>
 	</target>
 
 	<!-- Run -->
 	<target name="run" depends="compile">
-	<java classname="scala.tools.nsc.MainGenericRunner" fork="true">
-	<classpath>
-	<path refid="project.classpath"/>
-	</classpath>
+		<java classname="scala.tools.nsc.MainGenericRunner" fork="true">
+			<classpath>
+				<path refid="project.classpath"/>
+			</classpath>
 
-	<arg line="Test"/>
-	</java>
+			<arg line="Test"/>
+		</java>
 	</target>
 
-
-	
-	  <target name="docs" depends="init">
-        <delete dir="${docs.dir}"/>
-	    <mkdir dir="${docs.dir}"   />
-	    <scaladoc
+	<!-- Doc -->
+	<target name="docs" depends="init">
+		<delete dir="${docs.dir}"/>
+		<mkdir dir="${docs.dir}"   />
+		<scaladoc
 	      srcdir="${src.dir}"
 	      destdir="${docs.dir}"
 	      deprecation="yes" unchecked="yes"
 	    	windowtitle="MOOD Metrics Plug-in"
 	        doctitle="MOOD Metrics Plug-in API"	    	
 	      classpathref="project.classpath">
-	        <include name="**/*.scala"   />
-	    </scaladoc>
-	  </target>
-	
-	
-	
+			<include name="**/*.scala"   />
+		</scaladoc>
+	</target>
 
-	
-
-	
-	
-	  <property
+	<property
 	    name="sources.dir"
 	    value="${base.dir}/sources"
 	     />
-	  <property
+	<property
 	    name="build.dir"
 	    value="${base.dir}/build"
 	     />
-	  <target name="init">
-	    <property
+	<target name="init">
+		<property
 	      name="scala-library.jar"
 	      value="${scala.home}/lib/scala-library.jar"
 	       />
-	    <path id="build.classpath">
-	      <pathelement location="${scala-library.jar}"   />
-	      <!--<pathelement location="${your.path}"   />-->
-	      <pathelement location="${build.dir}"   />
-	    </path>
-	    <taskdef resource="scala/tools/ant/antlib.xml">
-	      <classpath>
-	        <pathelement location="${scala.home}/lib/scala-compiler.jar"   />
-	        <pathelement location="${scala-library.jar}"   />
-	      </classpath>
-	    </taskdef>
-	  </target>
-	
-	  <target name="build" depends="init">
-	    <mkdir dir="${build.dir}"   />
-	    <scalac srcdir="${sources.dir}"
+		<path id="build.classpath">
+			<pathelement location="${scala-library.jar}"   />
+			<!--<pathelement location="${your.path}"   />-->
+			<pathelement location="${build.dir}"   />
+		</path>
+		<taskdef resource="scala/tools/ant/antlib.xml">
+			<classpath>
+				<pathelement location="${scala.home}/lib/scala-compiler.jar"   />
+				<pathelement location="${scala-library.jar}"   />
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="build" depends="init">
+		<mkdir dir="${build.dir}"   />
+		<scalac srcdir="${sources.dir}"
 	            destdir="${build.dir}"
 	            classpathref="build.classpath"
 	            force="changed">
-	      <include name="compile/**/*.scala"   />
-	      <exclude name="forget/**/*.scala"   />
-	    </scalac>
-	  </target>	
-	
-	
-	
-	
-	
+			<include name="compile/**/*.scala"   />
+			<exclude name="forget/**/*.scala"   />
+		</scalac>
+	</target>
 </project>
