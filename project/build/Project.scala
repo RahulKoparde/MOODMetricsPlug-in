@@ -2,13 +2,13 @@ import sbt._
 import scala.io
 import java.io.{ File }
   
-class SWOTDProject(info: ProjectInfo) extends DefaultProject(info)
+class MOODMetricsProject(info: ProjectInfo) extends DefaultProject(info)
 {
   override def compileOptions = super.compileOptions.toList
   override def parallelExecution = true
   override def crossScalaVersions = List("2.8.0.Beta1-RC2") //List("2.8.0.Beta1-RC1", "2.8.0.Beta1-RC2")
-  def extraResources = "README"
-
+  def extraResources = "README.txt" +++ "LICENSE.txt" +++ "NOTICE.txt"
+  
   /* Eclipse libraries needed */
   val eclipseLibs = List(
     "org.eclipse.ui_.*.jar",

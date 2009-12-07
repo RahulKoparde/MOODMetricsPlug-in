@@ -1,3 +1,11 @@
+# Building
+
+$ ./xsbt
+...
+compile
+
+# Info
+
 If you want to be able to edit the .scala source files, install the nightly plug-in from 
 
 http://www.scala-lang.org/downloads/distrib/files/nightly/scala.update/
