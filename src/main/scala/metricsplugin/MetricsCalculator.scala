@@ -808,11 +808,11 @@ class MetricsCalculator(proj:String) {
     )
     
     // ensure that the Visibility isn't null or the empty string ("")
-    methods.valuesIterator.toList flatten map (m =>
+    methods.valuesIterator.toList.flatten.map(m =>
       assert(m._1 != "" && m._1 != null && m._2 != "" && m._2 != null, 
              "we have a (MethodName,Visibility) that is potentially null: " + m))
     
-    fields.valuesIterator.toList flatten map (f =>
+    fields.valuesIterator.toList.flatten.map(f =>
       assert(f._1 != "" && f._1 != null && f._2 != "" && f._2 != null, 
              "we have a (FieldName,Visibility) that is potentially null: " + f))
   }

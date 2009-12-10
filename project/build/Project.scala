@@ -5,8 +5,9 @@ import java.io.{ File }
 class MOODMetricsProject(info: ProjectInfo) extends DefaultProject(info)
 {
   override def compileOptions = super.compileOptions.toList
-  override def parallelExecution = true
-  override def crossScalaVersions = List("2.8.0.Beta1-RC2") //List("2.8.0.Beta1-RC1", "2.8.0.Beta1-RC2")
+  /*override def parallelExecution = true*/
+  //override def crossScalaVersions = List("2.8.0.Beta1-RC2") //List("2.8.0.Beta1-RC1", "2.8.0.Beta1-RC2")
+  /**/
   def extraResources = "README.txt" +++ "LICENSE.txt" +++ "NOTICE.txt"
   
   /* Eclipse libraries needed */
